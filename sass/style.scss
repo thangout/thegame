@@ -1,0 +1,53 @@
+body{
+	background: #dedede;	
+}
+
+.svgContainer svg{
+	background: #f9f9f9;
+}
+
+.castle{
+	fill: #FFC107;	
+}
+
+.shield{
+	fill: #03A9F4;
+}
+
+.card{
+	fill: red;
+}
+
+.cardPack{
+	&>.cardPack__card{
+		display: inline-block;	
+		margin-right: 15px;
+		border: 2px solid grey;
+		height: 120px;
+		width:  80px;
+
+		&.cardPack__card--build{
+			border-color: #4CAF50 !important; 
+			&:after{
+				content: "Build";
+				position: absolute;
+			}
+		}
+
+		&.cardPack__card--magic{
+			border-color: #673AB7; 
+			&:after{
+				content: "Magic";
+				position: absolute;
+			}
+		}
+
+		&.cardPack__card--attack{
+			border-color: #E91E63; 
+			&:after{
+				content: "Attack";
+				position: absolute;
+			}
+		}
+	}		
+}
