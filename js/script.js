@@ -28,13 +28,14 @@ function Game(argument) {
 	this.player1 = new Player("player1",positionCastleLeft); 
 	this.player1Castle = this.player1.castle; 
     this.g.appendChild(this.player1Castle.castle());        	
-	initCardPack(this.player1Castle,1);
 
 	//Creating player 2 
 	this.player2 = new Player("player2",positionCastleRight); 
 	this.player2Castle = this.player2.castle; 
     this.g.appendChild(this.player2Castle.castle());        	
-	initCardPack(this.player2Castle,2);
+
+	initCardPack(this.player1Castle,1,this.player2Castle);
+	initCardPack(this.player2Castle,2,this.player1Castle);
 
     //Append svg node
 	this.svgContainer = document.querySelector(".svgContainer");
@@ -208,7 +209,7 @@ function CardPack(){
 	};
 }
 
-function initCardPack(castle,player){
+function initCardPack(castle,player,castleOponent){
 
 	if (player === 1) {
 		var pack = document.querySelector(".js-cardPack1");
@@ -255,9 +256,12 @@ function initCardPack(castle,player){
 			var step = parseInt(this.getAttribute("data-value"));
 			var type = parseInt(this.getAttribute("data-type"));
 			if (type == 0) {
+				//build
 				castle.increaseHeight(step);
 			}else if(cardType == 1){
 			}else{
+				//attack
+				castleOponent.decreaseHeight(step);
 			};
 
   			var newInternalCard = cardPack.getCard();
