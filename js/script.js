@@ -13,9 +13,12 @@ var positionCastleRight = gWidth-positionCastleLeft-castleWidth;
 //Other variables
 var cardPack;
 var Game;
+var actualPlayer = 0; 
 
 
 function Game(argument) {
+	//Set up variables
+	actualPlayer = 0;
 	cardPack = new CardPack();
 		//svg	
 	this.g = document.createElementNS(xmlns,"svg");
@@ -42,6 +45,7 @@ function Game(argument) {
     this.svgContainer.appendChild(this.g);         	
     Game = this;
 	updateStats();
+	nextRound();
 }
 
 
@@ -173,6 +177,12 @@ function Player(name,positionOfCastle){
 	this.cardPack = new CardPack();
 }
 
+Player.prototype.increaseResources = function(){
+	this.builds += thisBuildsInc;
+	this.attacks += thisAttacksInc;
+	this.spells += thisSpellsInc;
+}
+
 //**************** Card **********************
 function Card(cost,val,type){
 	this.cost = cost;
@@ -258,7 +268,7 @@ function initCardPack(castle,player,castleOponent){
 			if (type == 0) {
 				//build
 				castle.increaseHeight(step);
-			}else if(cardType == 1){
+			}else if(type == 1){
 			}else{
 				//attack
 				castleOponent.decreaseHeight(step);
@@ -282,6 +292,7 @@ function initCardPack(castle,player,castleOponent){
 				this.className += basicCardClass + " " + "cardPack__card--attack";
 			};
 				updateStats();
+				nextRound();
 		})
 	};
 }
@@ -289,10 +300,25 @@ function initCardPack(castle,player,castleOponent){
 function updateStats(playerName){
 	this.playerName = playerName;
 	//player1
-	var statsHeight = document.querySelector(".js-stats.js-player1 .js-castleHeight")	
+	var statsHeight = document.querySelector(".js-player1 .js-stats .js-castleHeight")	
 	statsHeight.textContent = Game.player1.castle.height;
 
 	//player2
-	var statsHeight = document.querySelector(".js-stats.js-player2 .js-castleHeight")	
+	var statsHeight = document.querySelector(".js-player2 .js-stats .js-castleHeight")	
 	statsHeight.textContent = Game.player2.castle.height;
+}
+
+
+function nextRound(){
+	var player1Bar = document.querySelector(".js-player1");
+	var player2Bar = document.querySelector(".js-player2");
+	if(actualPlayer === 0){
+		player1Bar.className = player1Bar.className.replace( "disabled" , '' );
+		player2Bar.className += " disabled";
+		actualPlayer = 1;
+	}else{
+		player2Bar.className = player2Bar.className.replace(  "disabled" , '' );
+		player1Bar.className += " disabled";
+		actualPlayer = 0;
+	}
 }
