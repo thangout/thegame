@@ -40,28 +40,29 @@ function Game(argument) {
 	this.svgContainer = document.querySelector(".svgContainer");
     this.svgContainer.appendChild(this.g);         	
     Game = this;
+	updateStats();
 }
 
 
 //Castle
 function Castle(name,xOffset){
-	this.castleWidth = castleWidth;
-	this.castleHeight = castleHeight;
+	this.width = castleWidth;
+	this.height = castleHeight;
 	this.name = name;
 
 	this.castle = function(){
 		this.castle = document.createElementNS(xmlns,"rect");
-		this.castle.setAttributeNS (null, "width", 	this.castleWidth);
-		this.castle.setAttributeNS (null, "height", this.castleHeight);
+		this.castle.setAttributeNS (null, "width", 	this.width);
+		this.castle.setAttributeNS (null, "height", this.height);
 		this.castle.setAttributeNS (null, "x", xOffset);
-		this.castle.setAttributeNS (null, "y", gHeight-this.castleHeight);
+		this.castle.setAttributeNS (null, "y", gHeight-this.height);
 		this.castle.setAttributeNS (null, "class", "castle" + " " + this.name);
 		return this.castle;
 	};
 }
 
 Castle.prototype.increaseHeight = function(step){
-	this.castleHeight += 10*step;
+	this.height += 10*step;
 
 	//Koeficient for timing the amount to increase or decrease
 	var castleElement = document.querySelector("."+this.name);
@@ -91,7 +92,7 @@ Castle.prototype.increaseHeight = function(step){
 }
 
 Castle.prototype.decreaseHeight = function(step){
-	this.castleHeight -= 10*step;
+	this.height -= 10*step;
 	
 	//Koeficient for timing the amount to increase or decrease
 	var castleElement = document.querySelector("."+this.name);
@@ -186,18 +187,18 @@ function CardPack(){
 	this.pack = new Array();
 
 	//generate build cards, type = 0 
-	for (var i = 0; i < 3; i++) {
-		this.pack.push(new Card(i+1,i*2,0))
+	for (var i = 1; i < 4; i++) {
+		this.pack.push(new Card(i,i+1*2,0))
 	};
 
 	//generate magic cards, type = 1
-	for (var i = 0; i < 3; i++) {
-		this.pack.push(new Card(i+1,i*2,1))
+	for (var i = 1; i < 4; i++) {
+		this.pack.push(new Card(i,i*2,1))
 	};
 
 	//generate attack cards, type = 2
-	for (var i = 0; i < 3; i++) {
-		this.pack.push(new Card(i+1,i*2,2))
+	for (var i = 1; i < 4; i++) {
+		this.pack.push(new Card(i,i*2,2))
 	};
 
 	this.getCard = function(){
@@ -252,14 +253,23 @@ function initCardPack(castle,player){
 	for (var i = cards.length - 1; i >= 0; i--) {
 		cards[i].addEventListener("click", function(){
 			var step = parseInt(this.getAttribute("data-value"));
-			castle.increaseHeight(step);
+			var type = parseInt(this.getAttribute("data-type"));
+			if (type == 0) {
+				castle.increaseHeight(step);
+			}else if(cardType == 1){
+			}else{
+			};
+
   			var newInternalCard = cardPack.getCard();
   			this.setAttribute("data-value", newInternalCard.val);
   			this.setAttribute("data-cost", newInternalCard.cost);
   			this.setAttribute("data-type", newInternalCard.type);
   			this.removeAttribute("class");
+
 			var cardType = newInternalCard.type;
 			var basicCardClass = "cardPack__card";
+
+
 			if (cardType == 0) {
 				this.className += basicCardClass + " " + "cardPack__card--build";
 			}else if(cardType == 1){
@@ -267,6 +277,18 @@ function initCardPack(castle,player){
 			}else{
 				this.className += basicCardClass + " " + "cardPack__card--attack";
 			};
+				updateStats();
 		})
 	};
+}
+
+function updateStats(playerName){
+	this.playerName = playerName;
+	//player1
+	var statsHeight = document.querySelector(".js-stats.js-player1 .js-castleHeight")	
+	statsHeight.textContent = Game.player1.castle.height;
+
+	//player2
+	var statsHeight = document.querySelector(".js-stats.js-player2 .js-castleHeight")	
+	statsHeight.textContent = Game.player2.castle.height;
 }
